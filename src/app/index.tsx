@@ -8,9 +8,11 @@ import PostPage from "pages/PostPage";
 import AuthProvider from "./providers/AuthProvider";
 import RegisterPage from "pages/RegisterPage";
 import ProfilePage from "pages/ProfilePage";
+import NotFoundPage from "pages/NotFoundPage";
 
 const router = createBrowserRouter([
   { path: "/", element: <FeedPage /> },
+  { path: "/not-found", element: <NotFoundPage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/post/:id", element: <PostPage /> },
   { path: "/user/:id", element: <ProfilePage /> },

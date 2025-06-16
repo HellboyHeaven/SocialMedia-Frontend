@@ -26,6 +26,16 @@ export function clearTokens() {
   localStorage.removeItem("refresh_token");
 }
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 404) {
+      window.location.href = "/not-found";
+    }
+    return Promise.reject(error);
+  },
+);
+
 api.interceptors.request.use((config) => {
   const token = getAccessToken();
   console.log(`${config.url} : token ${token != null}`);

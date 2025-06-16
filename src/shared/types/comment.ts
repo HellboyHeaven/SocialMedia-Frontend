@@ -1,4 +1,3 @@
-import { PostType } from "./post";
 import { UserBriefType } from "./user";
 
 export type CommentType = {
@@ -11,6 +10,6 @@ export type CommentType = {
   liked: boolean;
 };
 
-export type CommentWithPostType = CommentType & {
-  post: PostType;
+export type CommentWithPostIdType = CommentType & {
+  postId: string;
 };

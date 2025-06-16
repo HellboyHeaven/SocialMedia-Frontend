@@ -31,13 +31,17 @@ export default function Comment({ comment, style }: Props) {
   const handleFinishEdit = () => setEditing(false);
   if (deleted) return <></>;
 
+  const canDelete = user?.username == comment.author?.username || user?.isAdmin;
+  const canEdit = user?.username == comment.author?.username;
+
+  console.log(user);
   return (
     <ContentCardFrame style={style?.frameStyle}>
       <div className="ml-2 mb-5 flex justify-between">
         <UserHeader user={comment.author} time={comment.createdAt} />
-        {user?.username == comment.author?.username && (
+        {canDelete && (
           <ActionMenu
-            onEdit={handleEdit}
+            onEdit={canEdit ? handleEdit : undefined}
             onDelete={async () => {
               try {
                 await deleteComment(comment.id);

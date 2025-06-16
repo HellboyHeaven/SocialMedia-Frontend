@@ -64,29 +64,33 @@ export default function ActionMenu({ onEdit, onDelete }: ActionMenuProps) {
           },
         }}
       >
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            onEdit?.();
-          }}
-        >
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
-        </MenuItem>
+        {onEdit != undefined && (
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              onEdit?.();
+            }}
+          >
+            <ListItemIcon>
+              <EditIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Edit</ListItemText>
+          </MenuItem>
+        )}
 
-        <MenuItem
-          onClick={() => {
-            handleClose();
-            onDelete?.();
-          }}
-        >
-          <ListItemIcon>
-            <DeleteIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
-        </MenuItem>
+        {onDelete && (
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              onDelete?.();
+            }}
+          >
+            <ListItemIcon>
+              <DeleteIcon fontSize="small" color="error" />
+            </ListItemIcon>
+            <ListItemText>Delete</ListItemText>
+          </MenuItem>
+        )}
       </Menu>
     </>
   );

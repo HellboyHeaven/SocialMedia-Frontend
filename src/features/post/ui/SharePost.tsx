@@ -31,7 +31,7 @@ export default function SharePost({ posId }: Props) {
       onClick={handleCopy}
     >
       <Share size={20} />
-      {copied && <span className="text-sm">Copied!</span>}
+      {copied && <span className="text-sm">Copied</span>}
     </button>
   );
 }

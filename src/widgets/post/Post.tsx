@@ -33,13 +33,17 @@ export default function Post({ post, style }: Props) {
   const handleCancelEdit = () => setEditing(false);
   const handleFinishEdit = () => setEditing(false);
   if (deleted) return <></>;
+
+  const canDelete = user?.username == post.author?.username || user?.isAdmin;
+  const canEdit = user?.username == post.author?.username;
+
   return (
     <ContentCardFrame style={style?.frameStyle}>
       <div className="ml-2 mb-5 flex justify-between">
         <UserHeader user={post.author} time={post.createdAt} />
-        {user?.username === post.author?.username && (
+        {canDelete && (
           <ActionMenu
-            onEdit={handleEdit}
+            onEdit={canEdit ? handleEdit : undefined}
             onDelete={async () => {
               if (deleted) return; // блокируем если уже удаляется
               await deletePost(post.id);

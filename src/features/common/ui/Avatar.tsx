@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { UserBriefType } from "shared/types/user";
 
 type AvatarProps = {
-  user: UserBriefType | undefined;
+  user?: UserBriefType;
   size?: number;
 };
 

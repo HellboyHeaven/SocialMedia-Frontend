@@ -3,20 +3,20 @@ import { useParams } from "react-router-dom";
 import { getUser } from "shared/api/profile";
 import { UserType } from "shared/types/user";
 import { PostType } from "shared/types/post";
-import { CommentWithPostType } from "shared/types/comment";
 import AppLayout from "widgets/common/AppLayout";
 import ProfileCard from "widgets/profile/ProfileCard";
 import { getUserPosts } from "shared/api/post";
 import PostSection from "widgets/post/PostSection";
 import CommentWithPostSection from "widgets/comment/CommentWithPostSection";
 import { getUserComments } from "shared/api/comment";
+import { CommentWithPostIdType } from "shared/types/comment";
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<UserType | null>(null);
   const [activeTab, setActiveTab] = useState<"posts" | "comments">("posts");
   const [posts, setPosts] = useState<PostType[]>([]);
-  const [comments, setComments] = useState<CommentWithPostType[]>([]);
+  const [comments, setComments] = useState<CommentWithPostIdType[]>([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [loadingComments, setLoadingComments] = useState(false);
 

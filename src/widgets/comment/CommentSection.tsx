@@ -46,37 +46,3 @@ export default function CommentSection({ comments }: CommentSectionProps) {
     </div>
   );
 }
-
-// Альтернативная версия без локального состояния (рекомендуемая)
-export function CommentSectionSimple({
-  comments,
-  onDeleteComment,
-}: CommentSectionProps) {
-  console.log("CommentSection received comments:", comments);
-
-  if (!comments || comments.length === 0) {
-    return (
-      <div className="mb-5 text-center py-4 text-gray-500">
-        Нет комментариев
-      </div>
-    );
-  }
-
-  return (
-    <div className="mb-5 flex flex-col items-stretch justify-items-center gap-5">
-      <AnimatePresence mode="wait">
-        {comments.map((comment) => (
-          <motion.div
-            key={comment.id}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            <Comment comment={comment} />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
-  );
-}
