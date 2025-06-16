@@ -1,76 +1,79 @@
-import { useTheme } from "app/providers/ThemeProvider";
-import CommentPost from "features/post/CommentPost";
-import LikePost from "features/post/LikePost";
-import SharePost from "features/post/SharePost";
+import { useState } from "react";
+import ContentCardFrame, {
+  ContentCardFrameStyle,
+} from "features/content/ui/ContentCardFrame";
+import UserHeader from "features/common/ui/UserHeader";
+import ActionMenu from "features/content/ui/ActionMenu";
+import LikePost from "features/post/ui/LikePost";
+import CommentPost from "features/post/ui/CommentPost";
+import SharePost from "features/post/ui/SharePost";
+import { PostType } from "shared/types/post";
+import Content, { ContentStyleProps } from "widgets/common/Content";
+import usePostEdit from "features/post/hooks/usePostEdit";
+import { useAuth } from "app/providers/AuthProvider";
+import { deletePost } from "shared/api/post";
 
-interface PostProps {
-  nickname: string;
-  username: string;
-  avatar: string;
-  content: string;
-  image?: string; // Optional image field
-  time: string;
-  likes: number;
-  comments: number;
+export interface PostStyleProps {
+  contentStyle?: ContentStyleProps;
+  frameStyle?: ContentCardFrameStyle;
 }
 
-export default function Post({
-  nickname,
-  username,
-  avatar,
-  content,
-  image,
-  time,
-  likes,
-  comments,
-}: PostProps) {
-  const { colors } = useTheme();
-  console.log(image);
+interface Props {
+  post: PostType;
+  style?: PostStyleProps;
+}
+
+export default function Post({ post, style }: Props) {
+  const { user } = useAuth();
+  const { editContent } = usePostEdit(post);
+  const [deleted, setDeleted] = useState(false);
+  const [editing, setEditing] = useState(false);
+
+  const handleEdit = () => setEditing(true);
+  const handleCancelEdit = () => setEditing(false);
+  const handleFinishEdit = () => setEditing(false);
+  if (deleted) return <></>;
   return (
-    <div
-      className="w-2xl p-5 bg-white rounded-2xl shadow-lg"
-      style={{ background: colors.primary }}
-    >
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <img
-          src={avatar}
-          alt="avatar"
-          className="w-12 h-12 rounded-full object-cover"
-        />
-        <div>
-          <p className="font-semibold text-lg" style={{ color: colors.text }}>
-            {nickname}
-          </p>
-          <p className="text-sm text-gray-500" style={{ color: colors.tint }}>
-            @{username} • {time}
-          </p>
-        </div>
+    <ContentCardFrame style={style?.frameStyle}>
+      <div className="ml-2 mb-5 flex justify-between">
+        <UserHeader user={post.author} time={post.createdAt} />
+        {user?.username === post.author?.username && (
+          <ActionMenu
+            onEdit={handleEdit}
+            onDelete={async () => {
+              if (deleted) return; // блокируем если уже удаляется
+              await deletePost(post.id);
+              setDeleted(true);
+            }}
+          />
+        )}
       </div>
 
-      {/* Content */}
-      <p
-        className="mt-3 text-base text-gray-800 whitespace-pre-wrap"
-        style={{ color: colors.text }}
-      >
-        {content}
-      </p>
+      {post && (
+        <>
+          <Content
+            id={post.id}
+            initialContent={post.content}
+            initialMedias={post.medias}
+            editContent={editContent}
+            editing={editing}
+            setEditing={setEditing}
+            onCancelEdit={handleCancelEdit}
+            onFinishEdit={handleFinishEdit}
+            style={style?.contentStyle}
+          />
 
-      {/* Image (if available) */}
-      {image && (
-        <img
-          src={image}
-          alt="post"
-          className="mt-4 w-full rounded-lg shadow-sm"
-        />
+          <div className="flex justify-between mt-5 mx-7">
+            <LikePost
+              targetId={post.id}
+              liked={post.liked}
+              count={post.likes}
+            />
+            <CommentPost postId={post.id} count={post.comments} />
+            <SharePost posId={post.id} />
+          </div>
+        </>
       )}
-
-      {/* Actions */}
-      <div className="flex justify-between mt-5 mx-7 text-sm text-gray-500">
-        <LikePost count={likes} />
-        <CommentPost count={comments} />
-        <SharePost />
-      </div>
-    </div>
+    </ContentCardFrame>
   );
 }

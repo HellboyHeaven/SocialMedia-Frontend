@@ -6,7 +6,7 @@ export default function PopularPanel() {
 
   return (
     <div
-      className="grid gap-4 w-sm p-5 bg-white rounded-2xl shadow-lg h-sm fixed"
+      className="grow grid max-w-sm gap-4 p-5 bg-white rounded-2xl shadow-lg sticky top-5"
       style={{ background: colors.primary }}
     >
       <PopularCircle username="" nickname="Elon Musk" followers={10} />
